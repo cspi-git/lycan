@@ -1,0 +1,13 @@
+env:
+  browser: true
+  es2021: true
+extends: eslint:recommended
+parserOptions:
+  ecmaVersion: latest
+rules: {
+  "no-undef": 1,
+  "no-inner-declarations": 1,
+  "no-unused-vars": 1,
+  "no-global-assign": 1,
+  "no-redeclare": 1
+}
