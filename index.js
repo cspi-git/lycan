@@ -5,13 +5,16 @@ const javascriptObfuscator = require("javascript-obfuscator")
 const recursiveRD = require("recursive-readdir-async")
 const readLine = require("readline-sync")
 const jsConfuser = require("js-confuser")
+const request = require("request-async")
 const columnify = require("columnify")
 const base64 = require("base-64")
 const chalk = require("chalk")
+const _ = require("lodash")
 const fs = require("fs")
 
 // Variables
 var Lycan = {
+    version: "1.0.0",
     obfuscators: [],
     toObfuscate: null
 }
@@ -20,9 +23,20 @@ var Lycan = {
 function log(type, message){
     if(type === "i"){
         console.log(`[${chalk.blueBright("*")}] ${message}`)
+    }else if(type === "w"){
+        console.log(`[${chalk.yellowBright("*")}] ${message}`)
     }else if(type === "e"){
         console.log(`[${chalk.red("*")}] ${message}`)
     }
+}
+
+Lycan.checkVersion = async function(){
+    var versions = await request("http://167.172.85.80/api/projects")
+    versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
+    
+    for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
+
+    Lycan.navigation()
 }
 
 Lycan.navigation = async function(){
@@ -188,7 +202,7 @@ General commands
         }, ))
         console.log()
     }else if(command === "version"){
-        log("i", "Your Lycan version is 1.0.0")
+        log("i", `Your Lycan version is ${Lycan.version}`)
     }else if(command === "exit"){
         process.exit()
     }else{
@@ -210,6 +224,7 @@ for( const pluginPath in plugins ){
 
     Lycan.obfuscators.push(plugin)
 }
+
 console.clear()
 
 console.log(chalk.redBright(`
@@ -227,4 +242,4 @@ console.log(chalk.redBright(`
    /jgs  /-''  '\\   \\  \\-.\\
 `))
 
-Lycan.navigation()
+Lycan.checkVersion()
