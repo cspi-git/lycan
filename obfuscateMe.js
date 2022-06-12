@@ -1,1 +1,1 @@
-console.log("I'm now obfuscated. Goodjob!")
+console.log("I'm now obfuscated. Good job!")
