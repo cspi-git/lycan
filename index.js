@@ -31,10 +31,14 @@ function log(type, message){
 }
 
 Lycan.checkVersion = async function(){
-    var versions = await request("http://167.172.85.80/api/projects")
-    versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
-    
-    for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
+    try{
+        var versions = await request("http://167.172.85.80/api/projects")
+        versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
+        
+        for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
+    }catch{
+        log("e", "Unable to check Lycan versions.")
+    }
 
     Lycan.navigation()
 }
@@ -71,13 +75,7 @@ General commands
 
         const obfuscators = []
 
-        for( const id of commandArgs[1].split(",") ){
-            for( const obfuscator of Lycan.obfuscators ){
-                if(obfuscator.id == id){
-                    obfuscators.push(obfuscator)
-                }
-            }
-        }
+        for( const id of commandArgs[1].split(",") ) for( const obfuscator of Lycan.obfuscators ) if(obfuscator.id == id) obfuscators.push(obfuscator)
 
         if(!obfuscators.length){
             log("e", "Invalid obfuscators id detected.")
@@ -145,7 +143,7 @@ General commands
             log("i", "File successfully obfuscated.")
             return Lycan.navigation()
         }else{
-            log("i", "Obfuscating the directory Javascript files.")
+            log("i", "Obfuscating the directory Javascript files, please wait.")
             return obfuscateDirectoryFiles()
         }
     }else if(commandArgs[0] === "set"){
@@ -213,7 +211,7 @@ General commands
 }
 
 // Main
-log("i", "Loading the plugins, please wait.")
+log("i", "Loading plugins, please wait.")
 const plugins = fs.readdirSync("./plugins").map((file)=> `./plugins/${file}`)
 
 for( const pluginPath in plugins ){
