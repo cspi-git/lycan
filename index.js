@@ -32,7 +32,7 @@ function log(type, message){
 
 Lycan.checkVersion = async function(){
     try{
-        var versions = await request("http://167.172.85.80/api/projects")
+        var versions = await request("http://167.172.85.80/api/free/projects")
         versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
         
         for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
