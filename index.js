@@ -32,7 +32,7 @@ function log(type, message){
 
 Lycan.checkVersion = async function(){
     try{
-        var versions = await request("http://167.172.85.80/api/free/projects")
+        var versions = await request("http://167.172.85.80/api/projects")
         versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
         
         for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
@@ -110,9 +110,7 @@ General commands
 
         async function obfuscateDirectoryFiles(){
             const javascriptFiles = await recursiveRD.list(Lycan.toObfuscate, { recursive: true, extensions: true, realPath: true, normalizePath: true }, function(obj, index, total){
-                if(obj.extension !== ".js"){
-                    return true
-                }
+                if(obj.extension !== ".js") return true
             })
 
             var fileIndex = 0
@@ -216,6 +214,7 @@ const plugins = fs.readdirSync("./plugins").map((file)=> `./plugins/${file}`)
 
 for( const pluginPath in plugins ){
     var plugin = require(plugins[pluginPath])
+    
     plugin = new plugin().info()
     plugin.path = plugins[pluginPath]
     plugin.id = pluginPath
