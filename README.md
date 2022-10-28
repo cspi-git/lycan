@@ -4,7 +4,7 @@ Powerful Javascript obfuscator framework.
 ## Installation
 Github:
 ```
-git clone https://github.com/OTAKKATO/lycan
+git clone https://github.com/hanaui-git/lycan
 ```
 
 NpmJS:
@@ -54,4 +54,4 @@ lycan > exit
 ```
 
 ## License
-MIT © OTAK
+MIT © Hanaui
