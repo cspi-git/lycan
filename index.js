@@ -7,14 +7,13 @@ const readLine = require("readline-sync")
 const jsConfuser = require("js-confuser")
 const request = require("request-async")
 const columnify = require("columnify")
-const base64 = require("base-64")
 const chalk = require("chalk")
 const _ = require("lodash")
 const fs = require("fs")
 
 // Variables
 var Lycan = {
-    version: "1.0.0",
+    version: "1.0.1",
     obfuscators: [],
     toObfuscate: null
 }
@@ -32,12 +31,12 @@ function log(type, message){
 
 Lycan.checkVersion = async function(){
     try{
-        var versions = await request("http://167.172.85.80/api/projects")
-        versions = _.find(JSON.parse(versions.body).data, { name: "Lycan" }).versions
+        var versions = await request("https://hanaui.vercel.app/api/github/repos/info")
+        versions = _.find(JSON.parse(versions.body), { name: "Lycan" }).versions
         
-        for( const version of versions ) if(Lycan.version < version) log("w", `New version detected. Please check https://github.com/OTAKKATO/Lycan\n`)
+        for( const version of versions ) if(Lycan.version < version) Lycan.log("w", `New version detected. Please check https://github.com/hanaui-git/lycan\n`)
     }catch{
-        log("e", "Unable to check Lycan versions.")
+        Lycan.log("e", "Unable to check Lycan versions.")
     }
 
     Lycan.navigation()
@@ -82,7 +81,7 @@ General commands
             return Lycan.navigation()
         }
 
-        const dependencies = { javascriptObfuscator: javascriptObfuscator, base64: base64, jsConfuser: jsConfuser }
+        const dependencies = { javascriptObfuscator: javascriptObfuscator, jsConfuser: jsConfuser }
         var obfuscatedIndex = 0
         
         function obfuscateFile(filePath){
