@@ -1,7 +1,7 @@
 "use strict";
 
 // Main
-class Plugin {
+class plugin {
     info(){
         return {
             name: "Base64Obf",
@@ -19,7 +19,6 @@ class Plugin {
 
         return new Promise((resolve)=>{
             var obfuscatedCode = ""
-
             obfuscatedCode = javascriptObfuscator.obfuscate(code, { target: "node", stringArrayEncoding: [ "rc4", "base64" ], identifierNamesGenerator: "mangled-shuffled", seed: 200, compact: true, stringArrayIndexesType: ["hexadecimal-number", "hexadecimal-numeric-string"], simplify: false, ignoreImports: true, stringArray: true, stringArrayRotate: true, stringArrayIndexShift: true, splitStrings: true, splitStringsChunkLength: 100, stringArrayThreshold: 1, numbersToExpressions: true, deadCodeInjection: true, deadCodeInjectionThreshold: 1, controlFlowFlattening: true, controlFlowFlatteningThreshold: 1 }).getObfuscatedCode()
             obfuscatedCode = "`" + new Buffer.from(obfuscatedCode, "utf8").toString("base64") + "`"
             obfuscatedCode = `
@@ -84,4 +83,4 @@ class Plugin {
     }
 }
 
-module.exports = Plugin
+module.exports = plugin

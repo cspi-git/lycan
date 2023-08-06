@@ -12,7 +12,7 @@ const _ = require("lodash")
 const fs = require("fs")
 
 // Variables
-var Lycan = {
+var lycan = {
     version: "1.0.1",
     obfuscators: [],
     toObfuscate: null
@@ -29,20 +29,20 @@ function log(type, message){
     }
 }
 
-Lycan.checkVersion = async function(){
+lycan.checkVersion = async function(){
     try{
-        var versions = await request("https://hanaui.vercel.app/api/github/repos/info")
+        var versions = await request("https://cspi-pa1.vercel.app/github/repos/info")
         versions = _.find(JSON.parse(versions.body), { name: "Lycan" }).versions
         
-        for( const version of versions ) if(Lycan.version < version) Lycan.log("w", `New version detected. Please check https://github.com/hanaui-git/lycan\n`)
+        for( const version of versions ) if(lycan.version < version) lycan.log("w", `New version detected. Please check https://github.com/cspi-git/lycan\n`)
     }catch{
-        Lycan.log("e", "Unable to check Lycan versions.")
+        lycan.log("e", "Unable to check Lycan versions.")
     }
 
-    Lycan.navigation()
+    lycan.navigation()
 }
 
-Lycan.navigation = async function(){
+lycan.navigation = async function(){
     const command = readLine.question(`${chalk.red("lycan>")} `)
     const commandArgs = command.split(" ")
 
@@ -55,30 +55,30 @@ General commands
     -------         -----------
     help            Show this.
     obfuscate       Obfuscate the target.
-    set             Set a file or directory(Recursive files) to obfuscate.
+    set             Set a file or directory (Recursive files) to obfuscate.
     config          Show your configuration.
     obfuscators     Show all the loaded obfuscators.
     version         Show this current Lycan version.
     exit            Exit Lycan.
     `)
     }else if(commandArgs[0] === "obfuscate"){
-        if(!Lycan.toObfuscate){
+        if(!lycan.toObfuscate){
             log("e", "The toObfuscator config is empty, please set a file or directory to obfuscate using the set command.")
-            return Lycan.navigation()
+            return lycan.navigation()
         }
 
         if(!commandArgs[1]){
-            log("i", "Usage: obfuscate <obfuscators(ID)(Multiple ids should be split by ,)>")
-            return Lycan.navigation()
+            log("i", "Usage: obfuscate <obfuscators (ID)(Multiple ids should be split by ,)>")
+            return lycan.navigation()
         }
 
         const obfuscators = []
 
-        for( const id of commandArgs[1].split(",") ) for( const obfuscator of Lycan.obfuscators ) if(obfuscator.id == id) obfuscators.push(obfuscator)
+        for( const id of commandArgs[1].split(",") ) for( const obfuscator of lycan.obfuscators ) if(obfuscator.id == id) obfuscators.push(obfuscator)
 
         if(!obfuscators.length){
             log("e", "Invalid obfuscators id detected.")
-            return Lycan.navigation()
+            return lycan.navigation()
         }
 
         const dependencies = { javascriptObfuscator: javascriptObfuscator, jsConfuser: jsConfuser }
@@ -108,7 +108,7 @@ General commands
         }
 
         async function obfuscateDirectoryFiles(){
-            const javascriptFiles = await recursiveRD.list(Lycan.toObfuscate, { recursive: true, extensions: true, realPath: true, normalizePath: true }, function(obj, index, total){
+            const javascriptFiles = await recursiveRD.list(lycan.toObfuscate, { recursive: true, extensions: true, realPath: true, normalizePath: true }, function(obj, index, total){
                 if(obj.extension !== ".js") return true
             })
 
@@ -117,7 +117,7 @@ General commands
             async function obfuscateFiles(){
                 if(fileIndex === javascriptFiles.length){
                     log("i", "Directory Javascript files successfully obfuscated.")
-                    return Lycan.navigation()
+                    return lycan.navigation()
                 }
 
                 log("i", `Obfuscating => ${javascriptFiles[fileIndex].fullname}`)
@@ -131,14 +131,14 @@ General commands
             obfuscateFiles()
         }
 
-        const toObfuscateStat = fs.statSync(Lycan.toObfuscate)
+        const toObfuscateStat = fs.statSync(lycan.toObfuscate)
 
         if(toObfuscateStat.isFile()){
             log("i", "Obfuscating the file, please wait.")
-            await obfuscateFile(Lycan.toObfuscate)
+            await obfuscateFile(lycan.toObfuscate)
 
             log("i", "File successfully obfuscated.")
-            return Lycan.navigation()
+            return lycan.navigation()
         }else{
             log("i", "Obfuscating the directory Javascript files, please wait.")
             return obfuscateDirectoryFiles()
@@ -146,22 +146,22 @@ General commands
     }else if(commandArgs[0] === "set"){
         if(!commandArgs[1]){
             log("i", "Usage: set <target>")
-            return Lycan.navigation()
+            return lycan.navigation()
         }
 
         if(!fs.existsSync(commandArgs[1])){
             log("e", "The file path does not exists.")
-            return Lycan.navigation()
+            return lycan.navigation()
         }
 
-        Lycan.toObfuscate = commandArgs[1]
+        lycan.toObfuscate = commandArgs[1]
 
         log("i", "Target successfully set.")
     }else if(command === "config"){
-        log("i", `toObfuscate => ${Lycan.toObfuscate}`)
+        log("i", `toObfuscate => ${lycan.toObfuscate}`)
     }else if(command === "obfuscators"){
         console.log()
-        console.log(columnify(Lycan.obfuscators, {
+        console.log(columnify(lycan.obfuscators, {
             columns: ["id", "name", "flow", "encryptionLevel", "author"],
             columnSplitter: " | ",
             config: {
@@ -197,14 +197,14 @@ General commands
         }, ))
         console.log()
     }else if(command === "version"){
-        log("i", `Your Lycan version is ${Lycan.version}`)
+        log("i", `Your Lycan version is ${lycan.version}`)
     }else if(command === "exit"){
         process.exit()
     }else{
         log("e", "Command is unrecognized.")
     }
 
-    Lycan.navigation()
+    lycan.navigation()
 }
 
 // Main
@@ -218,11 +218,10 @@ for( const pluginPath in plugins ){
     plugin.path = plugins[pluginPath]
     plugin.id = pluginPath
 
-    Lycan.obfuscators.push(plugin)
+    lycan.obfuscators.push(plugin)
 }
 
 console.clear()
-
 console.log(chalk.redBright(`
                .-'''''-.
              .'         '.
@@ -230,7 +229,7 @@ console.log(chalk.redBright(`
            :               :
            :      _/|      :
             :   =/_/      :     Lycan - Powerful Javascript obfuscator framework.
-            '._/ |     .'       ${Lycan.obfuscators.length} obfuscators loaded.
+            '._/ |     .'       ${lycan.obfuscators.length} obfuscators loaded.
           (   /  ,|...-'
            \\_/^\\/||__
         _/~  '""~'"' \\_
@@ -238,4 +237,4 @@ console.log(chalk.redBright(`
    /jgs  /-''  '\\   \\  \\-.\\
 `))
 
-Lycan.checkVersion()
+lycan.checkVersion()
