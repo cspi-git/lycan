@@ -4,7 +4,7 @@ Powerful Javascript obfuscator framework.
 ## Installation
 Github:
 ```
-git clone https://github.com/hanaui-git/lycan
+git clone https://github.com/cspi-git/lycan
 ```
 
 NpmJS:
@@ -18,7 +18,7 @@ node index.js
 ```
 
 ## Walkthrough
-Shows Lycan help menu and the list of the current obfuscators It has Including obfuscating the file **obfuscateMe.js** using the Simple obfuscator plugin(ID: 3).
+Shows Lycan help menu and the list of the current obfuscators It has Including obfuscating the file **obfuscateMe.js** using the Simple obfuscator plugin (ID: 3).
 
 ```
 $ node index.js
@@ -54,4 +54,4 @@ lycan > exit
 ```
 
 ## License
-MIT © Hanaui
+MIT © CSPI
